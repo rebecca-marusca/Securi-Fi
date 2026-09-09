@@ -45,7 +45,6 @@ class NodeReading:
 
         self.timestamp = timestamp
         self.movement_pct = movement_pct
-        self.state = state
 
         self.warning_type = warning_type
         self.is_calibrated = is_calibrated
@@ -249,6 +248,9 @@ class SecuriFiNode:
 
         while self._running:
             await asyncio.sleep(10)
+
+            if self._state != self.STATE_ARMED:
+                continue
 
             if self._last_valid_reading_ts == 0:
                 continue
