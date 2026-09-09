@@ -266,7 +266,7 @@ class MasterNode(SecuriFiNode):
                 self._publish_config_confirmation(target, success=success, cmd="arm")
             else:
                 self._send_espnow_to(target, {"cmd": "arm"})
-        elif command == "standby":
+        elif command == "disarm":
             if target == "master":
                 sensing = self._pause_sensing()
                 mq2_state = self._mq2.power_switch(False)
@@ -357,8 +357,8 @@ class MasterNode(SecuriFiNode):
                     "node_id": state.node_id,
                     "role": "slave",
                     "armed": False,
-                    "movement_pct": 0,
-                    "sensor_reading": 0,
+                    "movement_pct": None,
+                    "sensor_reading": None,
                     "report_type": "",
                     "warning_type": "",
                     "battery_pct": 0
@@ -373,8 +373,8 @@ class MasterNode(SecuriFiNode):
                     "armed": r.get("armed", False),
                     "movement_pct": r.get("mvt", 0),
                     "sensor_reading": r.get("mq2", 0),
-                    "report_type":r.get("rep", ""),
-                    "warning_type": r.get("war", ""),
+                    "report_type":r.get("rep", None),
+                    "warning_type": r.get("war", None),
                     "battery_pct": r.get("bat", 0)
                 })
 
