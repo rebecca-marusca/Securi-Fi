@@ -339,7 +339,7 @@ class MasterNode(SecuriFiNode):
         nodes.append({
             "node_id": self._node_id,
             "role": "master",
-            "armed": own_reading.armed,
+            # "armed": own_reading.armed, # NodeReading nu are armed
             "movement_pct": own_reading.movement_pct,
             "sensor_reading": own_reading.sensor_reading,
             "battery_pct": own_reading.battery_pct,
