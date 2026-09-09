@@ -35,12 +35,13 @@ class NodeReading:
         "packets_sent",
         "packets_dropped",
         "pps",
+        "armed",
 
         "battery_pct",
         "low_battery"
     )
 
-    def __init__(self, node_id: str, timestamp: int, movement_pct: int, state: str, warning_type: bool, is_calibrated: bool, packets_sent: int, packets_dropped: int, pps: int, sensor_reading: int, battery_pct: int, report_type: bool):
+    def __init__(self, node_id: str, timestamp: int, movement_pct: int, armed: str, warning_type: bool, is_calibrated: bool, packets_sent: int, packets_dropped: int, pps: int, sensor_reading: int, battery_pct: int, report_type: bool):
         self.node_id = node_id
 
         self.timestamp = timestamp
@@ -52,6 +53,7 @@ class NodeReading:
         self.packets_sent = packets_sent
         self.packets_dropped = packets_dropped
         self.pps = pps
+        self.armed = armed
 
         self.sensor_reading = sensor_reading
 
@@ -61,6 +63,7 @@ class NodeReading:
     def __repr__(self): # cum trebuie reprezentat obiectul cand e printat gen NodeReading(id = ..., mvt = ..., . . .)
         return (
             f"NodeReading(id={self.node_id}, "
+            f"armed={self.armed},"
             f"mvt={self.movement_pct}%, "
             f"sensor={self.sensor_reading}, "
             f"report={self.report_type}, "
@@ -225,9 +228,9 @@ class SecuriFiNode:
                         node_id=self._node_id,
                         timestamp=int(time.time()),
                         movement_pct=movement_pct,
-                        state=state,
-                        report_type="low_battery" if battery_reading.is_low else None, #NOTE report_type ii pentru low battery, not transmitting, weak signal si sensor flat da deocamdata numa low batterry ii implementat
-                        warning_type="gas" if mq2_reading.gas_detected else None, #NOTE ar trebuii sa fie gas sau fire da fire nu exista oricum
+                        armed=self._state == self.STATE_ARMED,
+                        report_type="low_battery" if battery_reading.is_low else "", #NOTE report_type ii pentru low battery, not transmitting, weak signal si sensor flat da deocamdata numa low batterry ii implementat
+                        warning_type="gas" if mq2_reading.gas_detected else "", #NOTE ar trebuii sa fie gas sau fire da fire nu exista oricum
                         sensor_reading=mq2_reading.raw_value,
                         is_calibrated=True,
                         packets_sent=self._traffic_gen.packets_sent if self._traffic_gen else 0,

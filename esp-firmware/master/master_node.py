@@ -338,11 +338,13 @@ class MasterNode(SecuriFiNode):
         probabilities.append(own_prob)
         nodes.append({
             "node_id": self._node_id,
+            "role": "master",
+            "armed": own_reading.armed,
             "movement_pct": own_reading.movement_pct,
             "sensor_reading": own_reading.sensor_reading,
             "battery_pct": own_reading.battery_pct,
             "report_type": own_reading.report_type, #not_transmitting, weak_signal, low_battery
-            "warning_type": own_reading.warning_type #fire, gas
+            "warning_type": own_reading.warning_type
         })
         #  nodes: node_id, movement_pct, sensor_reading, battery_pct, report_type, warning_type, is_alarm
 
@@ -353,10 +355,12 @@ class MasterNode(SecuriFiNode):
             if not_transmitting or state.reading is None:
                 nodes.append({
                     "node_id": state.node_id,
+                    "role": "slave",
+                    "armed": False,
                     "movement_pct": 0,
                     "sensor_reading": 0,
-                    "report_type": None,
-                    "warning_type": None,
+                    "report_type": "",
+                    "warning_type": "",
                     "battery_pct": 0
                 })
             else:
@@ -365,26 +369,27 @@ class MasterNode(SecuriFiNode):
                 probabilities.append(prob)
                 nodes.append({
                     "node_id": state.node_id,
+                    "role": "slave",
+                    "armed": r.get("armed", False),
                     "movement_pct": r.get("mvt", 0),
-                    "seonsor_reading": r.get("mq2", 0),
-                    "report_type":r.get("rep", None),
-                    "warning_type": r.get("war", None),
+                    "sensor_reading": r.get("mq2", 0),
+                    "report_type":r.get("rep", ""),
+                    "warning_type": r.get("war", ""),
                     "battery_pct": r.get("bat", 0)
                 })
 
-        intruder_probability = (sum(probabilities) / len(probabilities) if probabilities else 0.0)
-        gas_detected = any(n["warning_type"] == "gas" for n in nodes)
-        if gas_detected:
-            warning_type = "gas"
-        elif intruder_probability >= DETECTION_PROBABILITY_THRESHOLD:
-            warning_type = "intruder"
-        else:
-            warning_type = None
+        #intruder_probability = (sum(probabilities) / len(probabilities) if probabilities else 0.0)
+        #gas_detected = any(n["warning_type"] == "gas" for n in nodes)
+        #if gas_detected:
+        #    warning_type = "gas"
+        #elif intruder_probability >= DETECTION_PROBABILITY_THRESHOLD:
+        #    warning_type = "intruder"
+        #else:
+        #    warning_type = None
 
         return {
             "master_mac": self._own_mac or "00:00:00:00:00:00",
             "timestamp": str(time.time()),
-            "warning_type": warning_type,
             "nodes": nodes
         }
 
