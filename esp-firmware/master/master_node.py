@@ -202,9 +202,9 @@ class MasterNode(SecuriFiNode):
                     self._mqtt.publish(topic, payload)
 
                 if telemetry is not None:
-                    print(f"[{self._node_id}] before publish telemetry")
+                    # print(f"[{self._node_id}] before publish telemetry")
                     self._mqtt.publish(MQTT_TOPIC, telemetry)
-                    print(f"[{self._node_id}] after publish telemetry")
+                    # print(f"[{self._node_id}] after publish telemetry")
 
             except OSError as e:
                 print(f"[{self._node_id}] MQTT thread error: {e}")
