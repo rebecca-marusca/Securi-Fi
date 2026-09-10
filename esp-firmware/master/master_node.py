@@ -455,7 +455,7 @@ class MasterNode(SecuriFiNode):
             payload = json.dumps(cmd).encode("utf-8")
             self._espnow.send(mac_bytes, payload)
 
-            print(f"[{self._node_id}] Sent {cmd} to slave_{target}")
+            print(f"[{self._node_id}] Sent {cmd} to {target}")
         except (OSError, ValueError, IndexError, TypeError) as e:
             print(f"[{self._node_id}] Failed to send slave {target}: {e}")
 
