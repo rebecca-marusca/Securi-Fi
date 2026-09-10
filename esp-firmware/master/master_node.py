@@ -453,7 +453,7 @@ class MasterNode(SecuriFiNode):
 
             mac_bytes = self._parse_mac(SLAVE_MACS[index])
             payload = json.dumps(cmd).encode("utf-8")
-            self._espnow.send(mac_bytes, payload)
+            self._espnow.send(mac_bytes, payload,sync=False)
 
             print(f"[{self._node_id}] Sent {cmd} to {target}")
         except (OSError, ValueError, IndexError, TypeError) as e:

@@ -87,7 +87,10 @@ class SlaveNode(SecuriFiNode):
             "cmd": cmd,
             "success": success
         })
-        self._espnow.send(self._master_mac_bytes, payload.encode("utf-8"))
+        try:
+            self._espnow.send(self._master_mac_bytes, payload.encode("utf-8"), sync=False)
+        except OSError as e:
+            print(f"[{self._node_id}] Failed to send confirmation: {e}")
 
 
 
